@@ -33,13 +33,11 @@ resource "azurerm_virtual_network" "azurerm_vnet" {
   ddos_protection_plan {
     id     = azurerm_network_ddos_protection_plan.azurerm_ddos_pp.id
     enable = true
-    tags   = var.tags
   }
 
   subnet {
     name           = "competencyTest_subnet"
     address_prefix = "10.0.1.0/24"
     security_group = azurerm_network_security_group.azurerm_nsg.id
-    tags           = var.tags
   }
 }
