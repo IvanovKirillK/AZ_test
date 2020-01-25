@@ -54,7 +54,7 @@ resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
     count          = "3"
     vm_size        = "Standard_D2s_v3"
     os_type        = "Linux"
-    vnet_subnet_id = azurerm_virtual_network.azurerm_vnet.subnet.id
+    vnet_subnet_id = azurerm_virtual_network.azurerm_vnet.subnet
   }
 
   service_principal {
