@@ -72,3 +72,7 @@ resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
     network_plugin = "azure"
   }
 }
+
+output "kube_config" {
+  value = azurerm_kubernetes_cluster.azurerm_k8s_cluster.kube_config_raw
+}
