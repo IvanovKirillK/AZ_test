@@ -13,6 +13,30 @@ resource "azurerm_network_security_group" "azurerm_nsg" {
   location            = azurerm_resource_group.azurerm_resource_group.location
   resource_group_name = azurerm_resource_group.azurerm_resource_group.name
   tags                = var.tags
+
+  security_rule {
+    name                       = "HTTPS"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "HTTP"
+    priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 resource "azurerm_network_ddos_protection_plan" "azurerm_ddos_pp" {
@@ -34,11 +58,6 @@ resource "azurerm_virtual_network" "azurerm_vnet" {
     enable = true
   }
 
-//  subnet {
-//    name           = "competencyTest_subnet"
-//    address_prefix = "10.0.1.0/24"
-//    security_group = azurerm_network_security_group.azurerm_nsg.id
-//  }
 }
 
 resource "azurerm_subnet" "azurerm_subnet" {
@@ -46,6 +65,12 @@ resource "azurerm_subnet" "azurerm_subnet" {
   resource_group_name       = azurerm_resource_group.azurerm_resource_group.name
   address_prefix            = "10.1.1.0/24"
   virtual_network_name      = azurerm_virtual_network.azurerm_vnet.name
+
+}
+
+resource "azurerm_subnet_network_security_group_association" "azurerm_subnet_NSG" {
+  subnet_id                 = azurerm_subnet.azurerm_subnet.id
+  network_security_group_id = azurerm_network_security_group.azurerm_nsg.id
 }
 
 resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
