@@ -35,11 +35,18 @@ resource "azurerm_virtual_network" "azurerm_vnet" {
     enable = true
   }
 
-  subnet {
-    name           = "competencyTest_subnet"
-    address_prefix = "10.0.1.0/24"
-    security_group = azurerm_network_security_group.azurerm_nsg.id
-  }
+//  subnet {
+//    name           = "competencyTest_subnet"
+//    address_prefix = "10.0.1.0/24"
+//    security_group = azurerm_network_security_group.azurerm_nsg.id
+//  }
+}
+
+resource "azurerm_subnet" "azurerm_subnet" {
+  name                      = "acompetencyTest_subnet"
+  resource_group_name       = azurerm_resource_group.azurerm_resource_group.name
+  address_prefix            = "10.0.1.0/24"
+  virtual_network_name      = azurerm_virtual_network.azurerm_vnet.name
 }
 
 resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
@@ -54,7 +61,7 @@ resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
     count          = "3"
     vm_size        = "Standard_D2s_v3"
     os_type        = "Linux"
-    vnet_subnet_id = azurerm_virtual_network.azurerm_vnet.subnet
+    vnet_subnet_id = azurerm_subnet.azurerm_subnet.id
   }
 
   service_principal {
