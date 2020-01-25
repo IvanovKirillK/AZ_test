@@ -1,11 +1,11 @@
 variable "location" {
-  type        = "string"
+  type        = string
   default     = "australiasoutheast"
   description = "Set AZ location"
 }
 
 variable "tags" {
-  type        = "map"
+  type        = map
   description = "A list of tags associated to all resources"
 
   default = {
