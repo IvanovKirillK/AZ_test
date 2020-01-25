@@ -22,3 +22,9 @@ variable "CS" {
   type        = string
   description = "Service principal client Secret"
 }
+
+variable "aksVersion" {
+  type        = string
+  default     = "1.16.4"
+  description = "Service principal client Secret"
+}

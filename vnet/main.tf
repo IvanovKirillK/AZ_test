@@ -54,7 +54,7 @@ resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
   location   = azurerm_resource_group.azurerm_resource_group.location
   dns_prefix = "aks"
   resource_group_name = azurerm_resource_group.azurerm_resource_group.name
-  kubernetes_version  = "1.15.b"
+  kubernetes_version  = var.aksVersion
 
   agent_pool_profile {
     name           = "aks"
