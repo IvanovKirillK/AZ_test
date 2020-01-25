@@ -41,3 +41,28 @@ resource "azurerm_virtual_network" "azurerm_vnet" {
     security_group = azurerm_network_security_group.azurerm_nsg.id
   }
 }
+
+resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
+  name       = "competencyTest_aks"
+  location   = azurerm_resource_group.azurerm_resource_group.location
+  dns_prefix = "aks"
+  resource_group_name = azurerm_resource_group.azurerm_resource_group.name
+  kubernetes_version  = "1.15.b"
+
+  agent_pool_profile {
+    name           = "aks"
+    count          = "3"
+    vm_size        = "Standard_D2s_v3"
+    os_type        = "Linux"
+    vnet_subnet_id = azurerm_virtual_network.azurerm_vnet.subnet.id
+  }
+
+  service_principal {
+    client_id     = var.CID
+    client_secret = var.CS
+  }
+
+  network_profile {
+    network_plugin = "azure"
+  }
+}
