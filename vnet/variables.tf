@@ -7,7 +7,6 @@ variable "location" {
 variable "tags" {
   type        = map
   description = "A list of tags associated to all resources"
-
   default = {
     maintained_by = "terraform"
   }
