@@ -14,8 +14,8 @@ resource "azurerm_network_security_group" "azurerm_nsg" {
   resource_group_name = azurerm_resource_group.azurerm_resource_group.name
 }
 
-resource "azurerm_ddos_protection_plan" "azurerm_ddos_pp" {
-  name                = "competencyTest_ddospplan"
+resource "azurerm_network_ddos_protection_plan" "azurerm_ddos_pp" {
+  name                = "competencyTest_netDDoSpplan"
   location            = azurerm_resource_group.azurerm_resource_group.location
   resource_group_name = azurerm_resource_group.azurerm_resource_group.name
 }
@@ -28,7 +28,7 @@ resource "azurerm_virtual_network" "azurerm_vnet" {
   dns_servers         = ["10.0.0.4", "10.0.0.5"]
 
   ddos_protection_plan {
-    id     = azurerm_ddos_protection_plan.azurerm_ddos_pp.id
+    id     = azurerm_network_ddos_protection_plan.azurerm_ddos_pp.id
     enable = true
   }
 
