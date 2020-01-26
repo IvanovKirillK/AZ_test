@@ -26,5 +26,11 @@ variable "CS" {
 variable "aksVersion" {
   type        = string
   default     = "1.16.4"
-  description = "Service principal client Secret"
+  description = "Kube version for AKS cluster"
+}
+
+variable "DNSZoneName" {
+  type        = string
+  default     = "competencyTest_dns.com"
+  description = "DNS Zone name"
 }
