@@ -99,6 +99,14 @@ resource "azurerm_dns_a_record" "azurerm_dns_a_record" {
   ]
 }
 
+resource "azurerm_dns_cname_record" "azurerm_dns_cname_record_qa" {
+  name                = "qa"
+  zone_name           = azurerm_dns_zone.azurerm_dns_zone.name
+  resource_group_name = azurerm_resource_group.azurerm_resource_group.name
+  ttl                 = 300
+  record              = "${azurerm_dns_a_record.azurerm_dns_a_record.name}.${azurerm_dns_zone.azurerm_dns_zone.name}"
+}
+
 resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
   name       = "competencyTest_aks"
   location   = azurerm_resource_group.azurerm_resource_group.location
@@ -123,6 +131,47 @@ resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
     network_plugin = "azure"
   }
 
+}
+
+# Initialize Helm (and install Tiller)
+provider "helm" {
+  install_tiller = true
+
+  kubernetes {
+    host                   = azurerm_kubernetes_cluster.azurerm_k8s_cluster.kube_config.0.host
+    client_certificate     = base64decode(azurerm_kubernetes_cluster.azurerm_k8s_cluster.kube_config.0.client_certificate)
+    client_key             = base64decode(azurerm_kubernetes_cluster.azurerm_k8s_cluster.kube_config.0.client_key)
+    cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.azurerm_k8s_cluster.kube_config.0.cluster_ca_certificate)
+  }
+}
+
+
+# Add Kubernetes Stable Helm charts repo
+resource "helm_repository" "stable" {
+  name = "stable"
+  url  = "https://kubernetes-charts.storage.googleapis.com"
+}
+
+# Install Nginx Ingress using Helm Chart
+resource "helm_release" "nginx_ingress" {
+  name       = "nginx-ingress"
+  repository = helm_repository.stable.metadata.0.name
+  chart      = "nginx-ingress"
+
+  set {
+    name  = "rbac.create"
+    value = "false"
+  }
+
+  set {
+    name  = "controller.service.externalTrafficPolicy"
+    value = "Local"
+  }
+
+  set {
+    name  = "controller.service.loadBalancerIP"
+    value = azurerm_public_ip.azurerm_public_ip.ip_address
+  }
 }
 
 output "kube_config" {

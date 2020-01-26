@@ -33,6 +33,6 @@ variable "aksVersion" {
 
 variable "DNSZoneName" {
   type        = string
-  default     = "competencyTest_dns.com"
+  default     = "competencytest_dns.com"
   description = "DNS Zone name"
 }
