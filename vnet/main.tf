@@ -122,6 +122,7 @@ resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
   network_profile {
     network_plugin = "azure"
   }
+
 }
 
 output "kube_config" {
