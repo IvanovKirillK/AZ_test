@@ -177,3 +177,11 @@ resource "azurerm_kubernetes_cluster" "azurerm_k8s_cluster" {
 output "kube_config" {
   value = azurerm_kubernetes_cluster.azurerm_k8s_cluster.kube_config_raw
 }
+
+output "cluster_public_ip" {
+  value = azurerm_public_ip.azurerm_public_ip.ip_address
+}
+
+output "fqdn" {
+  value = "${azurerm_dns_a_record.azurerm_dns_a_record.name}.${azurerm_dns_zone.azurerm_dns_zone.name}"
+}
